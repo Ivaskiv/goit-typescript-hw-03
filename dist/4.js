@@ -13,55 +13,54 @@
 // house.openDoor(person.getKey());
 // house.comeIn(person);
 // ```
-class Key{
-private signature: number;
-constructor() {
-  this.signature = Math.random();
-}
-getSignature(): number{return this.signature}
-}
-class Person{
-private key: Key;
-constructor(key: Key) {
-  this.key = key;
-}
-getKey(): Key{
-  return this.key;
-}
-}
-abstract class House{
-  protected door: boolean = false; // захищена властивість, що визначає стан дверей (відкриті/закриті)
-  protected key: Key;
-  protected tenants: Person[] = []; // захищений масив, що зберігає об'єкти осіб, які мешкають у будинку
-constructor(key: Key) {
-  this.key = key;
-}
-// метод відкриття дверей, що буде реалізований в підкласах
-  abstract openDoor(key: Key): void;
-comeIn(person: Person): void {
-    if (this.door) {
-      this.tenants.push(person); // якщо двері відкриті, особа додається до масиву мешканців
-      console.log('Person entered the house');
-    } else {
-      console.log('The door is closed');
+class Key {
+    constructor() {
+        this.signature = Math.random();
     }
-  }
+    getSignature() { return this.signature; }
 }
-class MyHouse extends House{
-  openDoor(key: Key): void{
-  if (key.getSignature() === this.key.getSignature()) {// Якщо підпис ключа співпадає з підписом ключа будинку, 
-  this.door = true; //відкриваються двері
-  console.log('The door is now open')
-  } else {
-  console.log('Invalid key. The door closed')
+class Person {
+    constructor(key) {
+        this.key = key;
+    }
+    getKey() {
+        return this.key;
+    }
 }
+class House {
+    constructor(key) {
+        this.door = false; // захищена властивість, що визначає стан дверей (відкриті/закриті)
+        this.tenants = []; // захищений масив, що зберігає об'єкти осіб, які мешкають у будинку
+        this.key = key;
+    }
+    comeIn(person) {
+        if (this.door) {
+            this.tenants.push(person); // якщо двері відкриті, особа додається до масиву мешканців
+            console.log('Person entered the house');
+        }
+        else {
+            console.log('The door is closed');
+        }
+    }
 }
+class MyHouse extends House {
+    openDoor(key) {
+        if (key.getSignature() === this.key.getSignature()) { // Якщо підпис ключа співпадає з підписом ключа будинку, 
+            this.door = true; //відкриваються двері
+            console.log('The door is now open');
+        }
+        else {
+            console.log('Invalid key. The door closed');
+        }
+    }
 }
-
 const key = new Key();
 const house = new MyHouse(key);
 const person = new Person(key);
 house.openDoor(person.getKey());
 house.comeIn(person);
-
-export { };
+console.log('Attempting to open the door...');
+house.openDoor(person.getKey());
+console.log('Attempting to enter the house...');
+house.comeIn(person);
+export {};
